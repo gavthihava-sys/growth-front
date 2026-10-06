@@ -1,0 +1,12 @@
+import { Check, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import DashboardLayout from '../../layouts/DashboardLayout'
+import PageHeader from '../../components/common/PageHeader'
+import { apiGet } from '../../lib/api'
+
+export default function Recommendations() {
+  const [rows, setRows] = useState([])
+  const [error, setError] = useState('')
+  useEffect(() => { apiGet('/api/recommendations').then((response) => setRows(response.rows || [])).catch((requestError) => setError(requestError.message)) }, [])
+  return <DashboardLayout><PageHeader eyebrow="Manual Approval Mode" title="Recommendations" description="Review evidence-backed changes before anything can affect your live site." />{error && <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{error}</div>}<section className="panel overflow-hidden"><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead className="border-b bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="p-4">Recommendation</th><th className="p-4">Area</th><th className="p-4">Impact / evidence</th><th className="p-4">Action</th></tr></thead><tbody>{rows.map((row, index) => { const item = Array.isArray(row) ? { name: row[0], area: row[1], impact: row[2] } : row; return <tr key={`${item.name}-${index}`} className="border-b last:border-0"><td className="p-4 font-semibold">{item.name}</td><td className="p-4 text-slate-500">{item.area}</td><td className="p-4"><span className="rounded bg-amber-50 px-2 py-1 text-xs font-bold text-amber-700">{item.impact}</span>{item.evidence && <p className="mt-2 text-xs text-slate-500">{item.evidence}</p>}</td><td className="p-4"><div className="flex gap-2"><button type="button" onClick={() => setRows((current) => current.filter((_, rowIndex) => rowIndex !== index))} className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white"><Check size={14} /> Approve</button><button type="button" onClick={() => setRows((current) => current.filter((_, rowIndex) => rowIndex !== index))} className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-bold"><X size={14} /> Reject</button></div></td></tr> })}</tbody></table>{!rows.length && <p className="p-6 text-sm text-slate-500">No pending recommendations for this property.</p>}</div></section></DashboardLayout>
+}

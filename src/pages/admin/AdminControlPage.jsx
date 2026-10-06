@@ -1,0 +1,7 @@
+import { CheckCircle2, ShieldCheck } from 'lucide-react'
+import PageHeader from '../../components/common/PageHeader'
+import AdminLayout from '../../layouts/AdminLayout'
+
+export default function AdminControlPage({ eyebrow, title, description, action, items }) {
+  return <AdminLayout><PageHeader eyebrow={eyebrow} title={title} description={description} action={action && <span className="inline-flex items-center rounded-xl border border-stone-200 px-4 py-2.5 text-sm font-semibold text-stone-500">{action}</span>} /><section className="panel overflow-hidden"><div className="divide-y divide-orange-100">{items.map(([name, detail, status]) => <article key={name} className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between"><div><h2 className="font-semibold text-ink">{name}</h2><p className="mt-1 text-sm text-stone-600">{detail}</p></div><span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-lime-100 px-3 py-1.5 text-xs font-semibold text-stone-700"><CheckCircle2 size={14} />{status}</span></article>)}</div></section><section className="mt-6 flex gap-3 rounded-2xl border border-stone-200 bg-stone-50 p-5 text-sm text-stone-700"><ShieldCheck className="shrink-0 text-stone-500" size={20} /><p>These controls are read-only until the corresponding billing, AI, support, or reporting provider is connected. Connected client, website, job, and integration actions remain available in their dedicated screens.</p></section></AdminLayout>
+}

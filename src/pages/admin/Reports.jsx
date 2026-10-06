@@ -1,0 +1,5 @@
+import AdminLayout from '../../layouts/AdminLayout'
+import PageHeader from '../../components/common/PageHeader'
+import { useEffect, useState } from 'react'
+import { apiGet } from '../../lib/api'
+export default function Reports(){ const [jobs,setJobs]=useState([]); useEffect(()=>{apiGet('/api/admin/jobs').then((response)=>setJobs(response.rows||[])).catch(()=>{})},[]); return <AdminLayout><PageHeader title="Platform reports" description="Monitor report schedules and exports across all client organizations."/><section className="panel p-6"><h2 className="font-bold">Report operations</h2><p className="mt-2 text-sm text-slate-500">Client CSV and PDF reports are generated from the latest stored Search Console snapshot. Daily crawl activity is shown below.</p><div className="mt-5 space-y-3">{jobs.map((job,index)=><div key={`${job.name}-${index}`} className="flex items-center justify-between rounded-xl bg-slate-50 p-4 text-sm"><span className="font-semibold">{job.name}</span><span className="text-slate-500">{job.status}</span></div>)}</div></section></AdminLayout>}
